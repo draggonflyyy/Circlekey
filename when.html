@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>when- circlekey</title>
     <style>
         body { 
@@ -43,10 +44,12 @@
             align-items: center;
             gap: 25px;
             z-index: 5;
+            max-width: 90vw; /* Évite les débordements sur mobile */
         }
 
         .serrure {
             max-width: 220px;
+            width: 100%;
             height: auto;
             display: block;
         }
@@ -54,6 +57,7 @@
         audio { 
             filter: invert(100%); 
             width: 280px; 
+            max-width: 100%; /* S'adapte sur petit écran */
         }
 
         .back-zone {
@@ -88,6 +92,41 @@
             letter-spacing: 1px;
             margin: 0;
         }
+
+        /* ========================================================
+           RÈGLES SPÉCIALES POUR LES TÉLÉPHONES (ÉCRANS < 768px)
+           ======================================================== */
+        @media (max-width: 768px) {
+            body {
+                cursor: auto !important; /* Toucher tactile normal */
+            }
+
+            #custom-cursor {
+                display: none !important; /* Cache la main.png */
+            }
+
+            .back-zone {
+                cursor: auto !important;
+                bottom: 20px; 
+                left: 20px;
+                width: 65px;  
+            }
+
+            .top-right-detail {
+                top: 25px;
+                right: 25px;
+                width: 35px;
+            }
+
+            h1 {
+                bottom: 25px;
+                right: 25px;
+            }
+
+            .serrure {
+                max-width: 180px; 
+            }
+        }
     </style>
 </head>
 <body>
@@ -110,14 +149,18 @@
 
     <script>
         const cursor = document.getElementById('custom-cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.display = 'block';
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.addEventListener('mouseleave', () => {
-            cursor.style.display = 'none';
-        });
+        
+        // Active le curseur uniquement sur écran d'ordinateur
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', e => {
+                cursor.style.display = 'block';
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.addEventListener('mouseleave', () => {
+                cursor.style.display = 'none';
+            });
+        }
     </script>
 
 </body>
