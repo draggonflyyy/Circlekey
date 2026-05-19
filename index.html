@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Circle Key - Fast Spin Cascade</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle Key </title>
     <style>
         body { 
             background-color: black; 
@@ -43,6 +44,8 @@
             width: 1000px; 
             height: 667px; 
             z-index: 5;
+            max-width: 95vw; /* S'adapte sur téléphone */
+            max-height: 65vh;
         }
 
         img.main-key { 
@@ -67,7 +70,7 @@
             transform: scale(1.1);
         }
 
-        /* LETTRES EN MINUSCULES (selon ton Finder) */
+        /* LETTRES EN MINUSCULES */
         .lettre {
             position: absolute;
             width: 80px; 
@@ -109,6 +112,38 @@
         .s7 { top: 78%; left: 88%; width: 7%;  height: 10%; }
         .s8 { top: 86%; left: 77%; width: 9%;  height: 12%; }
         .s9 { top: 87%; left: 88%; width: 7%;  height: 10%; }
+
+        /* ========================================================
+           RÈGLES SPÉCIALES POUR LES TÉLÉPHONES (ÉCRANS < 768px)
+           ======================================================== */
+        @media (max-width: 768px) {
+            body {
+                cursor: auto !important; /* Le tactile fonctionne normalement */
+            }
+            
+            #custom-cursor {
+                display: none !important; /* Cache le curseur main.png */
+            }
+
+            .container {
+                /* Conserve les proportions parfaites de l'image sur petit écran */
+                width: 95vw;
+                height: calc(95vw * (667 / 1000));
+            }
+
+            /* Réduction de la taille des lettres volantes pour mobile */
+            .lettre {
+                width: 35px; 
+            }
+
+            /* On repositionne légèrement le bouton secret en bas à gauche */
+            .secret-trigger {
+                left: 15px;
+                bottom: 15px;
+                width: 35px;
+                opacity: 0.4; /* Légèrement visible sur mobile car pas de "hover" possible au doigt */
+            }
+        }
     </style>
 </head>
 <body>
@@ -147,14 +182,17 @@
 
     <script>
         const cursor = document.getElementById('custom-cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.display = 'block';
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.addEventListener('mouseleave', () => {
-            cursor.style.display = 'none';
-        });
+        // N'active le mouvement du curseur que si on n'est pas sur mobile
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', e => {
+                cursor.style.display = 'block';
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.addEventListener('mouseleave', () => {
+                cursor.style.display = 'none';
+            });
+        }
     </script>
 
 </body>
