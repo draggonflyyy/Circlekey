@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The End Circle</title>
     <style>
         body {
@@ -27,19 +28,29 @@
             display: none;
         }
 
+        /* CONTENEUR RESPONSIVE POUR GARDER L'ALIGNEMENT */
+        .container {
+            position: relative;
+            width: 1100px;
+            max-width: 95vw;
+            max-height: 95vh;
+            z-index: 5;
+        }
+
         /* L'IMAGE DE FOND */
         .center-image {
-            width: 1100px; 
+            width: 100%; 
             height: auto;
+            display: block;
             pointer-events: none;
         }
 
         /* BOUTON SECRET (Haut Droite) */
         .secret-trigger {
             position: absolute;
-            top: 40px;
-            right: 40px;
-            width: 150px; 
+            top: 4%;
+            right: 4%;
+            width: 13%; 
             z-index: 500;
             transition: transform 0.3s ease;
         }
@@ -57,8 +68,8 @@
         /* LIEN BACK */
         .back-link {
             position: absolute;
-            bottom: 30px;
-            right: 40px;
+            bottom: 4%;
+            right: 4%;
             font-family: Arial, sans-serif;
             color: white;
             text-decoration: none;
@@ -66,70 +77,124 @@
             z-index: 500;
         }
 
-        /* BOUTON OEIL */
+        /* BOUTON OEIL (Positionné en % par rapport à l'image) */
         .eye-button {
             position: absolute;
-            bottom: 125px; 
-            left: 200px;   
-            width: 75px;
-            height: 75px;
+            bottom: 18%; 
+            left: 18%;   
+            width: 70px;
+            height: 70px;
             border: 1px solid #666;
             padding: 2px;
             z-index: 500;
             background: rgba(255, 255, 255, 0.05);
             transition: border-color 0.3s;
-            cursor: none !important; /* Pour garder la main perso */
+            cursor: none !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .eye-button:hover {
             border-color: white;
         }
 
-        .eye-button img {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: cover;
+        /* Indicateur visuel minimaliste dans l'œil si aucune image n'est mise */
+        .eye-button::before {
+            content: "👁";
+            color: white;
+            font-size: 24px;
         }
 
-        /* LECTEUR CACHÉ */
+        /* LECTEUR AUDIO */
         audio {
             position: absolute;
-            bottom: 150px;
-            left: 300px; 
+            bottom: 22%;
+            left: 27%; 
             filter: invert(100%);
             display: none;
             z-index: 600;
+            width: 280px;
+        }
+
+        /* ========================================================
+           RÈGLES SPÉCIALES POUR LES TÉLÉPHONES (ÉCRANS < 768px)
+           ======================================================== */
+        @media (max-width: 768px) {
+            body {
+                cursor: auto !important; 
+            }
+
+            #custom-cursor {
+                display: none !important; 
+            }
+
+            .container {
+                width: 90vw;
+                height: calc(90vw * (auto)); /* S'adapte au ratio naturel */
+            }
+
+            .eye-button {
+                width: 45px;
+                height: 45px;
+                bottom: 16%;
+                left: 15%;
+            }
+
+            .eye-button::before {
+                font-size: 18px;
+            }
+
+            audio {
+                width: 180px;
+                bottom: 18%;
+                left: 32%;
+            }
+
+            .back-link {
+                font-size: 14px;
+                bottom: 2%;
+                right: 2%;
+            }
         }
     </style>
 </head>
 <body>
 
-    <img src="main.png" id="custom-cursor">
+    <img src="main.png" id="custom-cursor" alt="cursor">
 
-    <img src="endcircle.png" class="center-image">
+    <div class="container">
+        <img src="endcircle.png" class="center-image" alt="end circle">
 
-    <a href="secret.html" class="secret-trigger">
-        <img src="boutonsecret.png">
-    </a>
+        <a href="secret.html" class="secret-trigger">
+            <img src="boutonsecret.png" alt="secret button">
+        </a>
 
-    <a href="index.html" class="back-link">back</a>
+        <a href="index.html" class="back-link">back</a>
 
-    <div class="eye-button" id="toggle-audio">
- </div>
+        <div class="eye-button" id="toggle-audio"></div>
 
-    <audio id="player" controls>
-        <source src="endcircle.mp3" type="audio/mpeg">
-    </audio>
+        <audio id="player" controls>
+            <source src="endcircle.mp3" type="audio/mpeg">
+        </audio>
+    </div>
 
     <script>
         const cursor = document.getElementById('custom-cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.display = 'block';
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+        
+        // Gestion du curseur desktop uniquement
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', e => {
+                cursor.style.display = 'block';
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.addEventListener('mouseleave', () => {
+                cursor.style.display = 'none';
+            });
+        }
 
+        // Toggle affichage du lecteur audio
         const eyeBtn = document.getElementById('toggle-audio');
         const player = document.getElementById('player');
         
